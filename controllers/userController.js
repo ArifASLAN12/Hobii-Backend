@@ -1,11 +1,24 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { User } = require('../models');
+const { Op } = require('sequelize'); // en üstte eklenmeli
 require('dotenv').config();
 
 // Kayıt işlemi
 const signup = async (req, res) => {
-  const { username, email, password } = req.body;
+  const {
+    username,
+    firstName,
+    lastName,
+    email,
+    password,
+    gender,
+    birthday,
+    location,
+    bio,
+    photo
+  } = req.body;
+
   try {
     const existingUser = await User.findOne({ where: { email } });
     if (existingUser) {
@@ -16,8 +29,15 @@ const signup = async (req, res) => {
 
     const newUser = await User.create({
       username,
+      firstName,
+      lastName,
       email,
       password: hashedPassword,
+      gender,
+      birthday,
+      location,
+      bio,
+      photo
     });
 
     res.status(201).json({ message: 'Kayıt başarılı.', user: newUser });
@@ -29,9 +49,13 @@ const signup = async (req, res) => {
 
 // Giriş işlemi
 const login = async (req, res) => {
-  const { email, password } = req.body;
+  const { identifier, password } = req.body; // email yerine identifier parametresi kullanılsın
   try {
-    const user = await User.findOne({ where: { email } });
+    const user = await User.findOne({
+      where: {
+        [Op.or]: [{ email: identifier }, { username: identifier }] // Kullanıcıyı hem email hem de username ile aramak için
+      }
+    });
     if (!user) {
       return res.status(400).json({ message: 'Geçersiz e-posta veya şifre.' });
     }

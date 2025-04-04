@@ -12,10 +12,31 @@ module.exports = {
       username: {
         type: Sequelize.STRING
       },
+      firstName: {
+        type: Sequelize.STRING
+      },
+      lastName: {
+        type: Sequelize.STRING
+      },
       email: {
         type: Sequelize.STRING
       },
       password: {
+        type: Sequelize.STRING
+      },
+      gender: {
+        type: Sequelize.STRING
+      },
+      birthday: {
+        type: Sequelize.DATEONLY
+      },
+      location: {
+        type: Sequelize.STRING
+      },
+      bio: {
+        type: Sequelize.TEXT
+      },
+      photo: {
         type: Sequelize.STRING
       },
       createdAt: {

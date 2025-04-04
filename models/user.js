@@ -23,7 +23,15 @@ module.exports = (sequelize, DataTypes) => {
     birthday: DataTypes.DATEONLY,
     location: DataTypes.STRING,
     bio: DataTypes.TEXT,
-    photo: DataTypes.STRING
+    photo: DataTypes.STRING,
+    isAdmin: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+    isBlocked: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
   }, {
     sequelize,
     modelName: 'User',

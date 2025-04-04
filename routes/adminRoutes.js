@@ -1,14 +1,14 @@
 const express = require('express');
-const router = express.Router();
 const adminController = require('../controllers/adminController');
+const adminAuth = require('../middleware/adminAuthMiddleware');
 
-// Admin login
+const router = express.Router();
+
+// Giriş route'u (korumasız)
 router.post('/login', adminController.login);
 
-// Tüm kullanıcıları listele
-router.get('/users', adminController.getUsers);
-
-// Belirli kullanıcıyı getir
-router.get('/user/:id', adminController.getUserDetails);
+// Aşağıdaki route'lar sadece admin token ile erişilebilir
+router.get('/users', adminAuth, adminController.getUsers);
+router.get('/user/:id', adminAuth, adminController.getUserDetails);
 
 module.exports = router;

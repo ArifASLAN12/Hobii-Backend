@@ -1,3 +1,4 @@
+const { Op } = require('sequelize');
 const { User } = require('../models');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
@@ -50,7 +51,7 @@ const getUserDetails = async (req, res) => {
   const userId = req.params.id;
   try {
     const user = await User.findByPk(userId);
-    if (!user || user.isAdmin) {
+    if (!user) {
       return res.status(404).json({ message: 'Kullanıcı bulunamadı.' });
     }
     res.json(user);
@@ -59,8 +60,44 @@ const getUserDetails = async (req, res) => {
   }
 };
 
+// Kullanıcıyı engelle
+const blockUser = async (req, res) => {
+  const userId = req.params.id;
+  try {
+    const user = await User.findByPk(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'Kullanıcı bulunamadı.' });
+    }
+    user.isBlocked = true;
+    await user.save();
+    res.json({ message: 'Kullanıcı engellendi.' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Kullanıcı engellenemedi.' });
+  }
+};
+
+// Kullanıcının engelini kaldır
+const unblockUser = async (req, res) => {
+  const userId = req.params.id;
+  try {
+    const user = await User.findByPk(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'Kullanıcı bulunamadı.' });
+    }
+    user.isBlocked = false;
+    await user.save();
+    res.json({ message: 'Kullanıcının engeli kaldırıldı.' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Engel kaldırılamadı.' });
+  }
+};
+
 module.exports = {
   login,
   getUsers,
-  getUserDetails
+  getUserDetails,
+  blockUser,
+  unblockUser
 };

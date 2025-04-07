@@ -37,7 +37,8 @@ const signup = async (req, res) => {
       birthday,
       location,
       bio,
-      photo
+      photo,
+      isAdmin: false
     });
 
     res.status(201).json({ message: 'Kayıt başarılı.', user: newUser });
@@ -65,9 +66,11 @@ const login = async (req, res) => {
       return res.status(400).json({ message: 'Geçersiz e-posta veya şifre.' });
     }
 
-    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
-      expiresIn: '1h',
-    });
+    const token = jwt.sign(
+      { id: user.id, isAdmin: user.isAdmin },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' }
+    );
 
     res.status(200).json({ message: 'Giriş başarılı.', token });
   } catch (error) {

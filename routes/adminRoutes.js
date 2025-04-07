@@ -10,5 +10,7 @@ router.post('/login', adminController.login);
 // Aşağıdaki route'lar sadece admin token ile erişilebilir
 router.get('/users', adminAuth, adminController.getUsers);
 router.get('/user/:id', adminAuth, adminController.getUserDetails);
+router.patch('/user/:id/block', adminAuth, adminController.blockUser);
+router.patch('/user/:id/unblock', adminAuth, adminController.unblockUser);
 
 module.exports = router;

@@ -11,6 +11,20 @@ module.exports = (sequelize, DataTypes) => {
     location: {
       type: DataTypes.STRING,
       allowNull: true
+    },
+    isArchived: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false
+    },
+    visibility: {
+      type: DataTypes.ENUM('public', 'followers', 'private'),
+      allowNull: false,
+      defaultValue: 'public'
+    },
+    sharedPostId: {
+      type: DataTypes.INTEGER,
+      allowNull: true
     }
   });
 
@@ -24,6 +38,13 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'postId',
       as: 'comments',
       onDelete: 'CASCADE'
+    });
+
+    Post.belongsToMany(models.User, {
+      through: 'PostLikes',
+      foreignKey: 'postId',
+      otherKey: 'userId',
+      as: 'likedByUsers'
     });
   };
 

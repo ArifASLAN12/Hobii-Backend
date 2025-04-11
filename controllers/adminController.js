@@ -1,5 +1,5 @@
 const { Op } = require('sequelize');
-const { User } = require('../models');
+const { User, Report, Post, Comment } = require('../models');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
@@ -94,10 +94,37 @@ const unblockUser = async (req, res) => {
   }
 };
 
+const getReportDetail = async (req, res) => {
+  const reportId = req.params.id;
+
+  try {
+    const report = await Report.findByPk(reportId);
+    if (!report) {
+      return res.status(404).json({ message: 'Şikayet bulunamadı.' });
+    }
+
+    let detail = null;
+
+    if (report.type === 'post' && report.postId) {
+      detail = await Post.findByPk(report.postId);
+    } else if (report.type === 'comment' && report.commentId) {
+      detail = await Comment.findByPk(report.commentId);
+    } else if (report.type === 'user' && report.targetUserId) {
+      detail = await User.findByPk(report.targetUserId);
+    }
+
+    res.json({ report, detail });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Şikayet detayı alınamadı.' });
+  }
+};
+
 module.exports = {
   login,
   getUsers,
   getUserDetails,
   blockUser,
-  unblockUser
+  unblockUser,
+  getReportDetail
 };

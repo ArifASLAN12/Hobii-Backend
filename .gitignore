@@ -1,1 +1,21 @@
 .env
+# IDE/editor dosyaları
+.vscode/
+.idea/
+
+# log dosyaları
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# MacOS sistem dosyası
+.DS_Store
+
+# SQLite veritabanı vs.
+*.sqlite
+*.sqlite3
+
+# Docker özel durumlar (gereksizse)
+*.pid

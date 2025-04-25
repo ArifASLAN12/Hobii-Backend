@@ -18,6 +18,19 @@ module.exports = {
         type: Sequelize.TEXT,
         allowNull: true
       },
+      isArchived: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
+      },
+      visibility: {
+        type: Sequelize.ENUM('public', 'followers', 'private'),
+        allowNull: false,
+        defaultValue: 'public'
+      },
+      sharedPostId: {
+        type: Sequelize.INTEGER,
+        allowNull: true
+      },
       location: {
         type: Sequelize.STRING,
         allowNull: true

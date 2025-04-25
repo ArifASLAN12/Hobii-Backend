@@ -50,7 +50,8 @@ const signup = async (req, res) => {
 
 // Giriş işlemi
 const login = async (req, res) => {
-  const { identifier, password } = req.body; // email yerine identifier parametresi kullanılsın
+  const identifier = req.body.identifier || req.body.email || req.body.username;
+  const { password } = req.body; // email yerine identifier parametresi kullanılsın
   try {
     const user = await User.findOne({
       where: {

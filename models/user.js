@@ -41,8 +41,28 @@ module.exports = (sequelize, DataTypes) => {
     gender: DataTypes.STRING,
     birthday: DataTypes.DATEONLY,
     location: DataTypes.STRING,
-    bio: DataTypes.TEXT,
-    photo: DataTypes.STRING,
+    bio: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+      defaultValue: '',
+    },
+    photo: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      defaultValue: '',
+    },
+    website: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    phone: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    address: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
     isAdmin: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,

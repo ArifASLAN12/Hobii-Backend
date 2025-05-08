@@ -19,4 +19,16 @@ router.post('/create', authenticate, postController.createPost);
 // Tüm postları getir
 router.get('/all', authenticate, postController.getAllPosts);
 
+// Belirli bir kullanıcıya ait tüm postları getir
+router.get('/user/:userId', authenticate, postController.getPostsByUserId);
+
+// Tek bir postu getir
+router.get('/:id', authenticate, postController.getPostById);
+
+// Postu güncelle
+router.put('/:id', authenticate, postController.updatePost);
+
+// Postu sil
+router.delete('/:id', authenticate, postController.deletePost);
+
 module.exports = router;

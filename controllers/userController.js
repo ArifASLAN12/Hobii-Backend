@@ -16,7 +16,10 @@ const signup = async (req, res) => {
     birthday,
     location,
     bio,
-    photo
+    photo,
+    website,
+    phone,
+    address
   } = req.body;
 
   try {
@@ -38,10 +41,19 @@ const signup = async (req, res) => {
       location,
       bio,
       photo,
+      website,
+      phone,
+      address,
       isAdmin: false
     });
 
-    res.status(201).json({ message: 'Kayıt başarılı.', user: newUser });
+    const token = jwt.sign(
+      { id: newUser.id, isAdmin: newUser.isAdmin },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' }
+    );
+
+    res.status(201).json({ message: 'Kayıt başarılı.', token });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Sunucu hatası.' });
@@ -80,4 +92,55 @@ const login = async (req, res) => {
   }
 };
 
-module.exports = { signup, login };
+// Kendi profilini getirme
+const getMyProfile = async (req, res) => {
+  try {
+    const user = await User.findByPk(req.user.id, {
+      attributes: { exclude: ['password'] }
+    });
+    if (!user) {
+      return res.status(404).json({ message: 'Kullanıcı bulunamadı.' });
+    }
+    res.status(200).json(user);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Sunucu hatası.' });
+  }
+};
+
+// Profilini güncelleme
+const updateMyProfile = async (req, res) => {
+  try {
+    const [updated] = await User.update(req.body, {
+      where: { id: req.user.id }
+    });
+    if (!updated) {
+      return res.status(404).json({ message: 'Kullanıcı bulunamadı veya güncellenemedi.' });
+    }
+    const updatedUser = await User.findByPk(req.user.id, {
+      attributes: { exclude: ['password'] }
+    });
+    res.status(200).json(updatedUser);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Sunucu hatası.' });
+  }
+};
+
+// Başka kullanıcıların profilini görüntüleme
+const getUserProfileById = async (req, res) => {
+  try {
+    const user = await User.findByPk(req.params.id, {
+      attributes: ['id', 'username', 'photo', 'bio', 'location']
+    });
+    if (!user) {
+      return res.status(404).json({ message: 'Kullanıcı bulunamadı.' });
+    }
+    res.status(200).json(user);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Sunucu hatası.' });
+  }
+};
+
+module.exports = { signup, login, getMyProfile, updateMyProfile, getUserProfileById };

@@ -10,6 +10,28 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+# Node modules
+node_modules/
+
+# Build output
+dist/
+build/
+
+# Coverage reports
+coverage/
+
+# Cache directories
+.next/
+.cache/
+
+# Expo specific
+.expo/
+.expo-shared/
+
+# Other common temp files
+*.tmp
+*.swp
+
 # MacOS sistem dosyası
 .DS_Store
 
